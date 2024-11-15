@@ -1,6 +1,6 @@
 <template>
     <div class="wrapper">
-        <h1 class="wrapper__title">Tools</h1>
+        <h1 class="wrapper__title title">Tools</h1>
         <div class="wrapper__items grid is-col-min-11">
             <ToolCard
                 title="Markdown to PDF"
