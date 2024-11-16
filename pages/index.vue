@@ -8,9 +8,9 @@
                 icon="🖨️"
             />
             <ToolCard
-                title="Markdown to PDF"
-                href="/markdown-to-pdf"
-                icon="🖨️"
+                title="Solution Editor"
+                href="/solution-editor"
+                icon="🔒"
             />
         </div>
     </div>

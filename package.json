@@ -21,7 +21,8 @@
         "nuxt": "^3.14.159",
         "shiki": "^1.23.0",
         "vue": "latest",
-        "vue-router": "latest"
+        "vue-router": "latest",
+        "solution-zone": "git+https://github.com/inf-lab-dev/solution-zone.git#v1.0.3"
     },
     "devDependencies": {
         "@eslint/js": "^9.14.0",
