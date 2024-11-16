@@ -65,13 +65,36 @@ async function setupEditor() {
         );
     }
 
+    // Loads a worker without using the `?worker` syntax to circumvent a Vite + Nuxt bug...
+    const loadWorker = async (urlImport: Promise<{ default: string }>) => {
+        const { default: url } = await urlImport;
+
+        class WorkerWrapper extends Worker {
+            constructor(options?: WorkerOptions) {
+                super(url, options);
+            }
+        }
+
+        return { default: WorkerWrapper };
+    };
+
     editorInstance.value = await createEditor({
         worker: await createViteWorkerOptions(
-            import('monaco-editor/esm/vs/editor/editor.worker?worker'),
-            import('monaco-editor/esm/vs/language/css/css.worker?worker'),
-            import('monaco-editor/esm/vs/language/html/html.worker?worker'),
-            import('monaco-editor/esm/vs/language/json/json.worker?worker'),
-            import('monaco-editor/esm/vs/language/typescript/ts.worker?worker'),
+            loadWorker(import('monaco-editor/esm/vs/editor/editor.worker?url')),
+            loadWorker(
+                import('monaco-editor/esm/vs/language/css/css.worker?url'),
+            ),
+            loadWorker(
+                import('monaco-editor/esm/vs/language/html/html.worker?url'),
+            ),
+            loadWorker(
+                import('monaco-editor/esm/vs/language/json/json.worker?url'),
+            ),
+            loadWorker(
+                import(
+                    'monaco-editor/esm/vs/language/typescript/ts.worker?url'
+                ),
+            ),
         ),
         element: editorElement.value,
         options: {

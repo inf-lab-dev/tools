@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-import Tool from '~/components/markdown-to-pdf/Tool.vue';
+import Tool from '~/components/markdown-to-pdf/MarkdownToPdfTool.vue';
 
 useHead({
     title: 'Markdown to PDF',
