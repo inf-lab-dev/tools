@@ -71,7 +71,7 @@ async function setupEditor() {
 
         class WorkerWrapper extends Worker {
             constructor(options?: WorkerOptions) {
-                super(url, options);
+                super(url, { ...options, type: 'module' });
             }
         }
 
