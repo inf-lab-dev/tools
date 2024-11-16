@@ -154,10 +154,22 @@ function onFileSelected(event: Event) {
 .content {
     padding: 30px;
 
+    * {
+        // force to print with background
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+
+        // remove all previously set styles
+        all: unset;
+        display: revert;
+    }
+
     @extend .markdown-body;
 
     code {
         white-space: pre-wrap !important;
+
+        // TODO: CODES ARE RED DUE TO BULMA BEING THERE...
 
         &.shiki {
             font-size: 110% !important;
