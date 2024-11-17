@@ -71,7 +71,6 @@ async function setupEditor() {
             import('monaco-editor/esm/vs/language/css/css.worker?worker'),
             import('monaco-editor/esm/vs/language/html/html.worker?worker'),
             import('monaco-editor/esm/vs/language/json/json.worker?worker'),
-            import('monaco-editor/esm/vs/language/typescript/ts.worker?worker'),
         ),
         element: editorElement.value,
         options: {
