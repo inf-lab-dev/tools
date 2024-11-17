@@ -96,10 +96,10 @@ function onFileSelected(event: Event) {
 
     reader.onload = () => {
         renderFile(file.name, reader.result as string);
-
+        console.log('dd');
         nextTick(() => {
             print();
-            router.go(0);
+            //router.go(0);
         });
     };
 
@@ -165,6 +165,24 @@ function onFileSelected(event: Event) {
         // remove all previously set styles
         all: unset;
         display: revert;
+    }
+
+    // restore some defaults
+    em {
+        font-style: italic;
+    }
+
+    ul,
+    ol {
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        padding-inline-start: 40px;
+    }
+
+    ol {
+        list-style-type: decimal;
     }
 
     @extend .markdown-body;
