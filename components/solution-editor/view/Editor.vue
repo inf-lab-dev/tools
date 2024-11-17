@@ -71,6 +71,17 @@ async function setupEditor() {
             import('monaco-editor/esm/vs/language/css/css.worker?worker'),
             import('monaco-editor/esm/vs/language/html/html.worker?worker'),
             import('monaco-editor/esm/vs/language/json/json.worker?worker'),
+            (async () => {
+                class FailingTsWorker extends Worker {
+                    constructor() {
+                        super('/invalid-url');
+
+                        throw new Error('Make ts-worker fail automatically.');
+                    }
+                }
+
+                return { default: FailingTsWorker };
+            })(),
         ),
         element: editorElement.value,
         options: {
