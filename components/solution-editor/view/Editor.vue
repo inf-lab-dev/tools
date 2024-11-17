@@ -1,26 +1,21 @@
 <template>
-    <div ref="editorElement" class="editor">
-        <div v-if="!editorInstance" class="editor__loader">
-            <progress class="editor__loaderx progress is-primary" max="100">
-                Loading
-            </progress>
-            <h2 class="title">Loading the editor</h2>
-        </div>
-    </div>
+    <MonacoEditor
+        v-model="modelValue"
+        ref="editor"
+        class="editor"
+        :lang="language"
+        :options="monacoOptions"
+    />
 </template>
 
 <script lang="ts" setup>
-import {
-    createEditor,
-    createViteWorkerOptions,
-    type DecryptedAnnotation,
-    type Editor,
-} from 'solution-zone';
+import type * as Monaco from 'monaco-editor';
+import { type DecryptedAnnotation } from 'solution-zone';
 
 export type Selection = Pick<DecryptedAnnotation, 'line' | 'column'>;
 
-const editorElement = useTemplateRef<HTMLDivElement>('editorElement');
-const editorInstance = shallowRef<Editor>();
+const editor = useTemplateRef('editor');
+const monaco = useMonaco();
 
 const props = defineProps<{
     language: string;
@@ -33,12 +28,26 @@ const emit = defineEmits<{
 
 const modelValue = defineModel<string>({ required: true });
 
+const monacoOptions = computed<Monaco.editor.IEditorConstructionOptions>(
+    () => ({
+        language: props.language,
+        value: modelValue.value,
+        lineNumbers: 'on',
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+        renderValidationDecorations: 'on',
+        theme:
+            import.meta.env.SSR ||
+            matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'vs-dark'
+                : 'vs-light',
+    }),
+);
+
 function updateAnnotations() {
-    if (!editorInstance.value) {
+    if (!editor.value || !monaco) {
         return;
     }
-
-    const [monaco, editor] = editorInstance.value;
 
     const markers = props.annotations.map(
         ({
@@ -55,69 +64,29 @@ function updateAnnotations() {
         }),
     );
 
-    monaco.editor.setModelMarkers(editor.getModel()!, 'annotations', markers);
+    monaco.editor.setModelMarkers(
+        editor.value.$editor!.getModel()!,
+        'annotations',
+        markers,
+    );
 }
 
 async function setupEditor() {
-    if (!editorElement.value) {
+    if (!editor.value) {
         throw new ReferenceError(
             'Could not find element to display solution within.',
         );
     }
 
-    // Loads a worker manually using its url with the `?worker&url` syntax to circumvent a Vite + Nuxt bug...
-    const loadWorker = async (urlImport: Promise<{ default: string }>) => {
-        const { default: url } = await urlImport;
-
-        class WorkerWrapper extends Worker {
-            constructor(options?: WorkerOptions) {
-                super(url, { ...options, type: 'module' });
-            }
-        }
-
-        return { default: WorkerWrapper };
-    };
-
-    editorInstance.value = await createEditor({
-        worker: await createViteWorkerOptions(
-            import('monaco-editor/esm/vs/editor/editor.worker?worker'),
-            import('monaco-editor/esm/vs/language/css/css.worker?worker'),
-            import('monaco-editor/esm/vs/language/html/html.worker?worker'),
-            import('monaco-editor/esm/vs/language/json/json.worker?worker'),
-
-            // load ts-worker like this due to some weird Nuxt/Vite bug that exceeds the maximum call stack size when transforming
-            // this worker.
-            loadWorker(
-                import(
-                    'monaco-editor/esm/vs/language/typescript/ts.worker?url'
-                ),
-            ),
-        ),
-        element: editorElement.value,
-        options: {
-            language: props.language,
-            value: modelValue.value,
-            lineNumbers: 'on',
-            automaticLayout: true,
-            scrollBeyondLastLine: false,
-            renderValidationDecorations: 'on',
-            theme: matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'vs-dark'
-                : 'vs-light',
-        },
-    });
-
-    const [, editor] = editorInstance.value;
-
-    editor.onDidChangeModelContent(() => {
-        const value = editor.getValue();
+    editor.value.$editor!.onDidChangeModelContent(() => {
+        const value = editor.value!.$editor!.getValue();
 
         if (value !== modelValue.value) {
             modelValue.value = value;
         }
     });
 
-    editor.onDidChangeCursorSelection((event) => {
+    editor.value.$editor!.onDidChangeCursorSelection((event) => {
         const { startLineNumber, endLineNumber, startColumn, endColumn } =
             event.selection;
 
@@ -135,13 +104,12 @@ async function setupEditor() {
 }
 
 function gotoSelection(selection: Selection) {
-    if (!editorInstance.value) {
+    if (!editor.value) {
         throw new ReferenceError(
             'Could not find editor to go to selection within.',
         );
     }
 
-    const [, editor] = editorInstance.value;
     const {
         line: [startLineNumber, endLineNumber],
         column: [startColumn, endColumn],
@@ -154,42 +122,13 @@ function gotoSelection(selection: Selection) {
         endColumn,
     };
 
-    editor.revealRangeInCenter(monacoSelection);
-    editor.setSelection(monacoSelection);
+    editor.value.$editor!.revealRangeInCenter(monacoSelection);
+    editor.value.$editor!.setSelection(monacoSelection);
 }
 
-watch(
-    props,
-    () => {
-        updateAnnotations();
+watch(props, () => updateAnnotations(), { deep: true });
 
-        if (editorInstance.value) {
-            const [monaco, editor] = editorInstance.value;
-
-            monaco.editor.setModelLanguage(editor.getModel()!, props.language);
-        }
-    },
-    { deep: true },
-);
-
-watch(modelValue, (newValue) => {
-    if (editorInstance.value) {
-        const [, editor] = editorInstance.value;
-
-        if (newValue && editor.getValue() !== newValue) {
-            editor.setValue(newValue);
-        }
-    }
-});
-
-onMounted(() => setupEditor());
-onBeforeUnmount(() => {
-    if (editorInstance.value) {
-        const [, editor] = editorInstance.value;
-
-        editor.dispose();
-    }
-});
+onMounted(() => nextTick(() => setupEditor()));
 
 defineExpose({ gotoSelection });
 </script>
@@ -201,20 +140,5 @@ defineExpose({ gotoSelection });
 
     width: 100%;
     height: 100%;
-
-    &__loader {
-        display: flex;
-        flex-direction: column;
-
-        width: 100%;
-        height: 100%;
-
-        justify-content: center;
-        align-items: center;
-
-        &__bar {
-            width: 100%;
-        }
-    }
 }
 </style>
