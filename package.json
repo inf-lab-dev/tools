@@ -20,7 +20,7 @@
         "normalize.css": "^8.0.1",
         "nuxt": "^3.14.159",
         "shiki": "^1.23.0",
-        "solution-zone": "git+https://github.com/inf-lab-dev/solution-zone.git#v1.0.4",
+        "solution-zone": "git+https://github.com/inf-lab-dev/solution-zone.git#d93d7edff7ec89a82298c460783b9738cba07518",
         "vue": "latest",
         "vue-router": "latest"
     },

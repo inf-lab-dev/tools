@@ -4,6 +4,17 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     css: ['bulma'],
 
+    vite: {
+        css: {
+            preprocessorOptions: {
+                scss: {
+                    api: 'modern-compiler',
+                    quietDeps: true,
+                },
+            },
+        },
+    },
+
     components: {
         dirs: [],
     },
