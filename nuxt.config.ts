@@ -18,4 +18,6 @@ export default defineNuxtConfig({
     components: {
         dirs: [],
     },
+
+    modules: ['nuxt-monaco-editor'],
 });
