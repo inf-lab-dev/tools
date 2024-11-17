@@ -99,7 +99,7 @@ function onFileSelected(event: Event) {
         console.log('dd');
         nextTick(() => {
             print();
-            //router.go(0);
+            router.go(0);
         });
     };
 
