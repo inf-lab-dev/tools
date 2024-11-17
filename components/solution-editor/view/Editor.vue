@@ -1,8 +1,8 @@
 <template>
     <div class="editor">
         <div v-if="!editor" class="editor__loader">
-            <progress class="progress is-primary" max="100">Loading</progress>
-            <h2 class="title">Loading the editor</h2>
+            <progress class="progress is-primary" max="100">Laden</progress>
+            <h2 class="title">Lade den Editor</h2>
         </div>
         <MonacoEditor
             v-show="editor"
