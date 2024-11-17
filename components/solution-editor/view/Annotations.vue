@@ -4,20 +4,20 @@
             <thead>
                 <tr>
                     <th class="table__header--range">
-                        <abbr title="Start (Line, Column)">Start</abbr>
+                        <abbr title="Start (Zeile, Spalte)">Start</abbr>
                     </th>
                     <th class="table__header--range">
-                        <abbr title="End (Line, Column)">End</abbr>
+                        <abbr title="Ende (Zeile, Spalte)">Ende</abbr>
                     </th>
-                    <th class="table__header--comment">Comment</th>
-                    <th class="table__header--actions">Actions</th>
+                    <th class="table__header--comment">Kommentar</th>
+                    <th class="table__header--actions">Aktionen</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-if="modelValue.length === 0" class="is-info">
                     <td colspan="4">
-                        No annotations have been created yet, make a selection
-                        and create one!
+                        Es wurden noch keine Kommentare erstellt, markiere Text
+                        im Editor und erstelle einen!
                     </td>
                 </tr>
 
@@ -39,13 +39,13 @@
                         <td>
                             <div class="buttons">
                                 <button class="button" @click="reveal(index)">
-                                    Reveal in Editor
+                                    Auswählen
                                 </button>
                                 <button
                                     class="button is-danger"
                                     @click="remove(index)"
                                 >
-                                    Remove
+                                    Löschen
                                 </button>
                             </div>
                         </td>
@@ -70,7 +70,7 @@ function remove(index: number) {
     const { comment } = modelValue.value![index];
 
     const proceed = confirm(
-        `Are you sure you want to delete the annotation "${comment}"?`,
+        `Möchtest du wirklich den Kommentar "${comment}" löschen?`,
     );
 
     if (proceed) {

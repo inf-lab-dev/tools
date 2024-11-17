@@ -3,15 +3,11 @@
         <h1 class="wrapper__title title">Tools</h1>
         <div class="wrapper__items grid is-col-min-11">
             <ToolCard
-                title="Markdown to PDF"
+                title="Markdown zu PDF"
                 href="/markdown-to-pdf"
                 icon="🖨️"
             />
-            <ToolCard
-                title="Solution Editor"
-                href="/solution-editor"
-                icon="🔒"
-            />
+            <ToolCard title="Lösungseditor" href="/solution-editor" icon="🔒" />
         </div>
     </div>
 </template>

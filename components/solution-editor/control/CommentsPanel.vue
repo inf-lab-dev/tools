@@ -1,9 +1,9 @@
 <template>
     <form class="panel comment" @submit.prevent="createComment">
-        <h2 class="panel-heading">Comments</h2>
+        <h2 class="panel-heading">Kommentare</h2>
         <div class="panel-block">
             <div class="field comment__field">
-                <label class="label" for="language-selection">Comment</label>
+                <label class="label" for="language-selection">Kommentar</label>
                 <div class="control">
                     <textarea
                         v-model="comment"
@@ -19,7 +19,7 @@
                 type="submit"
                 class="button is-fullwidth"
             >
-                Add comment
+                Kommentar erstellen
             </button>
         </div>
     </form>

@@ -6,6 +6,6 @@
 import Tool from '~/components/solution-editor/SolutionEditorTool.vue';
 
 useHead({
-    title: 'Solution Editor',
+    title: 'Lösungseditor',
 });
 </script>

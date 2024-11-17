@@ -1,7 +1,8 @@
 <template>
     <div v-if="!renderedContent" class="selection">
         <p class="selection__text">
-            Click to select the markdown file or drop it onto the page.
+            Klicke, um eine Markdown-Datei auszuwählen, oder lege sie auf dieser
+            Seite ab.
         </p>
         <input
             class="selection__input"
@@ -103,7 +104,9 @@ function onFileSelected(event: Event) {
     };
 
     reader.onerror = () => {
-        alert(`Could not load "${file.name}": ${reader.error}`);
+        alert(
+            `Die Datei "${file.name}" konnte nicht geladen werden: ${reader.error}`,
+        );
 
         router.go(0);
     };
@@ -168,8 +171,6 @@ function onFileSelected(event: Event) {
 
     code {
         white-space: pre-wrap !important;
-
-        // TODO: CODES ARE RED DUE TO BULMA BEING THERE...
 
         &.shiki {
             font-size: 110% !important;

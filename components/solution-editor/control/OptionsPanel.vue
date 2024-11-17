@@ -1,9 +1,11 @@
 <template>
     <article class="panel is-primary">
-        <h2 class="panel-heading">Options</h2>
+        <h2 class="panel-heading">Einstellungen</h2>
         <div class="panel-block">
             <div class="field">
-                <label class="label" for="language-selection">Language</label>
+                <label class="label" for="language-selection">
+                    Programmiersprache
+                </label>
                 <div class="control">
                     <div class="select">
                         <select v-model="modelValue" id="language-selection">
@@ -17,9 +19,7 @@
         </div>
         <div class="panel-block">
             <div class="field">
-                <label class="label" for="encryption-key">
-                    Encryption Key
-                </label>
+                <label class="label" for="encryption-key">Schlüssel</label>
                 <div class="control">
                     <input
                         v-model="key"
@@ -42,14 +42,14 @@
                 class="button is-fullwidth mb-3"
                 @click="load"
             >
-                Load encrypted solution
+                Verschlüsselte Lösung laden
             </button>
             <button
                 :disabled="!!!key"
                 class="button is-primary is-fullwidth"
                 @click="save"
             >
-                Save encrypted solution
+                Verschlüsselte Lösung speichern
             </button>
             <input
                 ref="fileInputElement"
@@ -93,7 +93,9 @@ async function loadSolution(event: Event) {
 
         emit('loaded', solution);
     } catch (_) {
-        alert('Could not decrypt the solution, is your key correct?');
+        alert(
+            'Die Lösung konnte nicht entschlüsselt werden, ist der Schlüssel korrekt?',
+        );
     }
 }
 </script>
