@@ -19,5 +19,9 @@ export default defineNuxtConfig({
         dirs: [],
     },
 
+    monacoEditor: {
+        locale: 'de',
+    },
+
     modules: ['nuxt-monaco-editor'],
 });
