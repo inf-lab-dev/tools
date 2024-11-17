@@ -1,21 +1,26 @@
 <template>
-    <MonacoEditor
-        v-model="modelValue"
-        ref="editor"
-        class="editor"
-        :lang="language"
-        :options="monacoOptions"
-    />
+    <div ref="editorElement" class="editor">
+        <div v-if="!editorInstance" class="editor__loader">
+            <progress class="editor__loaderx progress is-primary" max="100">
+                Loading
+            </progress>
+            <h2 class="title">Loading the editor</h2>
+        </div>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import type * as Monaco from 'monaco-editor';
-import { type DecryptedAnnotation } from 'solution-zone';
+import {
+    createEditor,
+    createViteWorkerOptions,
+    type DecryptedAnnotation,
+    type Editor,
+} from 'solution-zone';
 
 export type Selection = Pick<DecryptedAnnotation, 'line' | 'column'>;
 
-const editor = useTemplateRef('editor');
-const monaco = useMonaco();
+const editorElement = useTemplateRef<HTMLDivElement>('editorElement');
+const editorInstance = shallowRef<Editor>();
 
 const props = defineProps<{
     language: string;
@@ -28,26 +33,12 @@ const emit = defineEmits<{
 
 const modelValue = defineModel<string>({ required: true });
 
-const monacoOptions = computed<Monaco.editor.IEditorConstructionOptions>(
-    () => ({
-        language: props.language,
-        value: modelValue.value,
-        lineNumbers: 'on',
-        automaticLayout: true,
-        scrollBeyondLastLine: false,
-        renderValidationDecorations: 'on',
-        theme:
-            import.meta.env.SSR ||
-            matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'vs-dark'
-                : 'vs-light',
-    }),
-);
-
 function updateAnnotations() {
-    if (!editor.value || !monaco) {
+    if (!editorInstance.value) {
         return;
     }
+
+    const [monaco, editor] = editorInstance.value;
 
     const markers = props.annotations.map(
         ({
@@ -64,29 +55,48 @@ function updateAnnotations() {
         }),
     );
 
-    monaco.editor.setModelMarkers(
-        editor.value.$editor!.getModel()!,
-        'annotations',
-        markers,
-    );
+    monaco.editor.setModelMarkers(editor.getModel()!, 'annotations', markers);
 }
 
 async function setupEditor() {
-    if (!editor.value) {
+    if (!editorElement.value) {
         throw new ReferenceError(
             'Could not find element to display solution within.',
         );
     }
 
-    editor.value.$editor!.onDidChangeModelContent(() => {
-        const value = editor.value!.$editor!.getValue();
+    const [monaco, editor] = await createEditor({
+        worker: await createViteWorkerOptions(
+            import('monaco-editor/esm/vs/editor/editor.worker?worker'),
+            import('monaco-editor/esm/vs/language/css/css.worker?worker'),
+            import('monaco-editor/esm/vs/language/html/html.worker?worker'),
+            import('monaco-editor/esm/vs/language/json/json.worker?worker'),
+        ),
+        element: editorElement.value,
+        options: {
+            language: props.language,
+            value: modelValue.value,
+            lineNumbers: 'on',
+            automaticLayout: true,
+            scrollBeyondLastLine: false,
+            renderValidationDecorations: 'on',
+            theme: matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'vs-dark'
+                : 'vs-light',
+        },
+    });
+
+    editorInstance.value = [monaco, editor];
+
+    editor.onDidChangeModelContent(() => {
+        const value = editor.getValue();
 
         if (value !== modelValue.value) {
             modelValue.value = value;
         }
     });
 
-    editor.value.$editor!.onDidChangeCursorSelection((event) => {
+    editor.onDidChangeCursorSelection((event) => {
         const { startLineNumber, endLineNumber, startColumn, endColumn } =
             event.selection;
 
@@ -104,12 +114,13 @@ async function setupEditor() {
 }
 
 function gotoSelection(selection: Selection) {
-    if (!editor.value) {
+    if (!editorInstance.value) {
         throw new ReferenceError(
             'Could not find editor to go to selection within.',
         );
     }
 
+    const [, editor] = editorInstance.value;
     const {
         line: [startLineNumber, endLineNumber],
         column: [startColumn, endColumn],
@@ -122,13 +133,42 @@ function gotoSelection(selection: Selection) {
         endColumn,
     };
 
-    editor.value.$editor!.revealRangeInCenter(monacoSelection);
-    editor.value.$editor!.setSelection(monacoSelection);
+    editor.revealRangeInCenter(monacoSelection);
+    editor.setSelection(monacoSelection);
 }
 
-watch(props, () => updateAnnotations(), { deep: true });
+watch(
+    props,
+    () => {
+        updateAnnotations();
 
-onMounted(() => nextTick(() => setupEditor()));
+        if (editorInstance.value) {
+            const [monaco, editor] = editorInstance.value;
+
+            monaco.editor.setModelLanguage(editor.getModel()!, props.language);
+        }
+    },
+    { deep: true },
+);
+
+watch(modelValue, (newValue) => {
+    if (editorInstance.value) {
+        const [, editor] = editorInstance.value;
+
+        if (newValue && editor.getValue() !== newValue) {
+            editor.setValue(newValue);
+        }
+    }
+});
+
+onMounted(() => setupEditor());
+onBeforeUnmount(() => {
+    if (editorInstance.value) {
+        const [, editor] = editorInstance.value;
+
+        editor.dispose();
+    }
+});
 
 defineExpose({ gotoSelection });
 </script>
@@ -140,5 +180,20 @@ defineExpose({ gotoSelection });
 
     width: 100%;
     height: 100%;
+
+    &__loader {
+        display: flex;
+        flex-direction: column;
+
+        width: 100%;
+        height: 100%;
+
+        justify-content: center;
+        align-items: center;
+
+        &__bar {
+            width: 100%;
+        }
+    }
 }
 </style>
