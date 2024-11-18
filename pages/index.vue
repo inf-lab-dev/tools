@@ -8,6 +8,11 @@
                 icon="🖨️"
             />
             <ToolCard title="Lösungseditor" href="/solution-editor" icon="🔒" />
+            <ToolCard
+                title="setup.sh Generator"
+                href="/setup-generator"
+                icon="📦"
+            />
         </div>
     </div>
 </template>
