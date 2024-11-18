@@ -35,6 +35,7 @@ import c from 'shiki/langs/c.mjs';
 import diff from 'shiki/langs/diff.mjs';
 import js from 'shiki/langs/javascript.mjs';
 import python from 'shiki/langs/python.mjs';
+import githubDark from 'shiki/themes/github-dark.mjs';
 import githubLight from 'shiki/themes/github-light.mjs';
 import MakeZipPanel from './panel/MakeZipPanel.vue';
 import SetupShPanel from './panel/SetupShPanel.vue';
@@ -54,7 +55,11 @@ const highlightedCode = computed(() =>
     highligher.value
         .codeToHtml(code.value, {
             lang: 'bash',
-            theme: githubLight,
+            theme:
+                import.meta.env.SSR ||
+                matchMedia('(prefers-color-scheme: dark)').matches
+                    ? githubDark
+                    : githubLight,
         })
         // unwrap the code-block
         .replace(/(<pre.*<code>|<\/code.*pre>)/g, ''),
