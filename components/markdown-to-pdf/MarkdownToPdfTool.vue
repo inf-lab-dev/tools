@@ -185,6 +185,13 @@ function onFileSelected(event: Event) {
         list-style-type: decimal;
     }
 
+    th,
+    td {
+        &[align='right'] {
+            text-align: right;
+        }
+    }
+
     @extend .markdown-body;
 
     code {
