@@ -96,10 +96,10 @@ function onFileSelected(event: Event) {
 
     reader.onload = () => {
         renderFile(file.name, reader.result as string);
-        console.log('dd');
+
         nextTick(() => {
             print();
-            router.go(0);
+            //router.go(0);
         });
     };
 

@@ -88,8 +88,6 @@ onBeforeUnmount(() => highligher.value?.dispose());
 
 <style lang="scss" scoped>
 .wrapper {
-    padding: 1rem;
-
     &__code {
         user-select: all;
     }

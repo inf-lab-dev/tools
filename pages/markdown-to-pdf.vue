@@ -8,4 +8,8 @@ import Tool from '~/components/markdown-to-pdf/MarkdownToPdfTool.vue';
 useHead({
     title: 'Markdown zu PDF',
 });
+
+definePageMeta({
+    layout: 'plain',
+});
 </script>

@@ -31,8 +31,8 @@ import ToolCard from '~/components/ToolCard.vue';
 
     gap: 1.5rem;
 
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 80vh;
 
     &__title {
         font-size: 780%;
@@ -40,7 +40,6 @@ import ToolCard from '~/components/ToolCard.vue';
 
     &__items {
         width: 100%;
-        padding: 0 1rem;
     }
 }
 </style>
