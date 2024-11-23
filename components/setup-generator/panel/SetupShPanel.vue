@@ -84,7 +84,7 @@ const code = computed(() => {
         ? `
 # Display further instructions
 echo -e "\${YELLOW}👉 To continue, run the following commands:\${RESET}"
-${commandList.map(renderCommand)}
+${commandList.map(renderCommand).join('\n')}
 `
         : '';
 
