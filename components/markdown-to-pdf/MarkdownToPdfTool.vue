@@ -37,6 +37,7 @@ type Options = null | {
 const FRONT_MATTER_REGEX = /^---\s*\n([\s\S]+?)\n---\s*\n/;
 
 const router = useRouter();
+const route = useRoute();
 
 const isLoading = ref(false);
 const renderedContent = ref<string>();
@@ -99,7 +100,10 @@ function onFileSelected(event: Event) {
 
         nextTick(() => {
             print();
-            //router.go(0);
+
+            if (!('noreload' in route.query)) {
+                router.go(0);
+            }
         });
     };
 
