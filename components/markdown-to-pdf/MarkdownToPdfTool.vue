@@ -20,6 +20,7 @@
 import jsYaml from 'js-yaml';
 import { Marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
+import markedKatex from 'marked-katex-extension';
 import { createHighlighterCoreSync, createJavaScriptRegexEngine } from 'shiki';
 import bash from 'shiki/langs/bash.mjs';
 import c from 'shiki/langs/c.mjs';
@@ -68,6 +69,9 @@ const marked = computed(
                     );
                 },
             }),
+            markedKatex({
+                throwOnError: false,
+            }),
         ),
 );
 
@@ -98,13 +102,14 @@ function onFileSelected(event: Event) {
     reader.onload = () => {
         renderFile(file.name, reader.result as string);
 
-        nextTick(() => {
+        // use this timeout to get into next rendering tick and wait for math font being loaded
+        setTimeout(() => {
             print();
 
             if (!('noreload' in route.query)) {
                 router.go(0);
             }
-        });
+        }, 5);
     };
 
     reader.onerror = () => {
@@ -154,6 +159,12 @@ function onFileSelected(event: Event) {
     }
 }
 </style>
+
+<style lang="scss">
+// make available globally
+@use '~/node_modules/katex/dist/katex.min.css';
+</style>
+
 <style lang="scss" module>
 // can't use "scoped" to apply the extended classes aswell
 @use '~/node_modules/github-markdown-css/github-markdown-light.css';
