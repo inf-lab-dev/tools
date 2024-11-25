@@ -162,7 +162,7 @@ function onFileSelected(event: Event) {
 
 <style lang="scss">
 // make available globally
-@use '~/node_modules/katex/src/styles/katex.scss';
+@use '~/node_modules/katex/dist/katex.min.css';
 </style>
 
 <style lang="scss" module>
