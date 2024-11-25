@@ -19,6 +19,7 @@
 <script lang="ts" setup>
 import jsYaml from 'js-yaml';
 import { Marked } from 'marked';
+import markedFootnote from 'marked-footnote';
 import { markedHighlight } from 'marked-highlight';
 import markedKatex from 'marked-katex-extension';
 import { createHighlighterCoreSync, createJavaScriptRegexEngine } from 'shiki';
@@ -72,6 +73,7 @@ const marked = computed(
             markedKatex({
                 throwOnError: false,
             }),
+            markedFootnote(),
         ),
 );
 
@@ -86,10 +88,13 @@ function renderFile(fileName: string, fileContent: string) {
         document.title = options.pdf.title;
     }
 
-    renderedContent.value = marked.value.parse(
-        fileContent.replace(FRONT_MATTER_REGEX, ''),
-        { async: false },
-    );
+    renderedContent.value = marked.value
+        .parse(fileContent.replace(FRONT_MATTER_REGEX, ''), { async: false })
+        // remove footnotes label and replace with line
+        .replace(
+            /<h2 id="footnote-label".*>.*<\/h2>/g,
+            '<hr style="height: 1px">',
+        );
 }
 
 function onFileSelected(event: Event) {
@@ -205,6 +210,11 @@ function onFileSelected(event: Event) {
         &[align='right'] {
             text-align: right;
         }
+    }
+
+    // use this weird selector to not get module classes
+    section[class='footnotes'] {
+        color: #59636e;
     }
 
     @extend .markdown-body;
