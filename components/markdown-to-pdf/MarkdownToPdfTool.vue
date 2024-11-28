@@ -3,6 +3,14 @@
         <p class="selection__text">
             Klicke, um eine Markdown-Datei auszuwählen, oder lege sie auf dieser
             Seite ab.
+
+            <span class="selection__note"
+                >Aus technischen Gründen unterstützt diese Markdown-Darstellung
+                <em>nicht die selben Funktionen</em> wie inf-lab.dev!
+                <br />
+                Insbesondere Erweiterungen bei Code-Blöcken sind hier nicht
+                verfügbar.</span
+            >
         </p>
         <input
             class="selection__input"
@@ -19,6 +27,7 @@
 <script lang="ts" setup>
 import jsYaml from 'js-yaml';
 import { Marked } from 'marked';
+import markedAlert from 'marked-alert';
 import markedFootnote from 'marked-footnote';
 import { markedHighlight } from 'marked-highlight';
 import markedKatex from 'marked-katex-extension';
@@ -74,6 +83,7 @@ const marked = computed(
                 throwOnError: false,
             }),
             markedFootnote(),
+            markedAlert(),
         ),
 );
 
@@ -143,6 +153,11 @@ function onFileSelected(event: Event) {
 
     &__text {
         padding: 1rem;
+    }
+
+    &__note {
+        display: block;
+        font-size: 1rem;
     }
 
     &,
