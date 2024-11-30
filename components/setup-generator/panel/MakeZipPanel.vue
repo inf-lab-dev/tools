@@ -29,9 +29,7 @@
         </div>
         <div class="panel-block">
             <div class="field">
-                <label class="label" for="commands">
-                    Befehle nach dem Entpacken
-                </label>
+                <label class="label" for="commands"> Dateien </label>
                 <div class="control">
                     <textarea
                         v-model="files"
@@ -66,7 +64,7 @@ const props = defineProps<{
 }>();
 
 const file = shallowRef('');
-const files = shallowRef('task.pdf');
+const files = shallowRef('');
 
 const fileName = computed(() =>
     file.value.endsWith(ZIP_EXTENSION)
