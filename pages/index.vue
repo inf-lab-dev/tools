@@ -2,17 +2,7 @@
     <div class="wrapper">
         <h1 class="wrapper__title title">Tools</h1>
         <div class="wrapper__items grid is-col-min-11">
-            <ToolCard
-                title="Markdown zu PDF"
-                href="/markdown-to-pdf"
-                icon="🖨️"
-            />
             <ToolCard title="Lösungseditor" href="/solution-editor" icon="🔒" />
-            <ToolCard
-                title="setup.sh Generator"
-                href="/setup-generator"
-                icon="📦"
-            />
         </div>
     </div>
 </template>
