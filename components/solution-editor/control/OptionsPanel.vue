@@ -12,6 +12,8 @@
                             <option value="c">C</option>
                             <option value="python">Python</option>
                             <option value="javascript">JavaScript</option>
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
                         </select>
                     </div>
                 </div>
