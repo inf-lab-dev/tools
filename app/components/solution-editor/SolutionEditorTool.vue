@@ -1,29 +1,24 @@
 <template>
-    <div class="view">
-        <div class="tabs">
-            <ul>
-                <li
-                    v-for="file in decryptedSolution.files"
-                    :class="[activeFile === file && 'is-active']"
-                >
-                    <a @click="selectFile(file)">{{ file.name }}</a>
-                </li>
-            </ul>
-
-            <div class="buttons ml-5">
-                <button class="button is-primary" @click="createFile">
-                    Datei hinzufügen
-                </button>
+    <div class="columns">
+        <div class="column is-two-fifths">
+            <div class="columns">
+                <div class="column">
+                    <OptionsPanel
+                        v-model="decryptedSolution.title"
+                        @loaded="loadedSolution"
+                        @save="save"
+                    />
+                </div>
+                <div class="column" id="commentsPanel"></div>
             </div>
+
+            <FileExplorerPanel
+                v-model:files="decryptedSolution.files"
+                v-model:active-file="activeFile"
+            />
         </div>
 
-        <FileEditor :model-value="activeFile" @delete="deleteFile">
-            <OptionsPanel
-                v-model="decryptedSolution.title"
-                @loaded="loadedSolution"
-                @save="save"
-            />
-        </FileEditor>
+        <EditorPanel class="column" :model-value="activeFile" />
     </div>
 </template>
 
@@ -33,52 +28,21 @@ import {
     type DecryptedSolution,
     type DecryptedSolutionFile,
 } from 'solution-zone';
-import OptionsPanel from './control/OptionsPanel.vue';
-import FileEditor from './view/FileEditor.vue';
-
-const createDefaultFile = () => ({
-    name: 'Untitled.c',
-    language: 'c',
-    code: '',
-    annotations: [],
-});
+import EditorPanel from './panel/EditorPanel.vue';
+import FileExplorerPanel from './panel/FileExplorerPanel.vue';
+import OptionsPanel from './panel/OptionsPanel.vue';
 
 const hasUnsavedChanges = ref(false);
-const activeFile = ref<DecryptedSolutionFile>(createDefaultFile());
+const activeFile = ref<DecryptedSolutionFile>();
 const decryptedSolution = ref<DecryptedSolution>({
     title: '',
-    files: [activeFile.value],
+    files: [],
 });
-
-function selectFile(newActiveFile: DecryptedSolutionFile) {
-    activeFile.value = newActiveFile;
-}
-
-function createFile() {
-    const newFile = createDefaultFile();
-
-    decryptedSolution.value.files.push(newFile);
-    selectFile(newFile);
-}
-
-function deleteFile(fileToDelete: DecryptedSolutionFile) {
-    decryptedSolution.value.files = decryptedSolution.value.files.filter(
-        (file) => file !== fileToDelete,
-    );
-
-    if (activeFile.value === fileToDelete) {
-        selectFile(decryptedSolution.value.files[0]!);
-    }
-
-    if (decryptedSolution.value.files.length === 0) {
-        createFile();
-    }
-}
 
 function loadedSolution(solution: DecryptedSolution) {
     decryptedSolution.value = solution;
 
-    selectFile(decryptedSolution.value.files[0]!);
+    activeFile.value = decryptedSolution.value.files[0]!;
 
     nextTick(() => (hasUnsavedChanges.value = false));
 }

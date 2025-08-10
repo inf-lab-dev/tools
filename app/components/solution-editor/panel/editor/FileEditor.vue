@@ -10,19 +10,6 @@
                     @update-selection="updateSelection"
                 />
             </div>
-            <div class="fileEditor__interfaceControls">
-                <slot />
-
-                <FileOptionsPanel
-                    v-model:name="modelValue.name"
-                    v-model:language="modelValue.language"
-                    @delete="onDelete()"
-                />
-                <CommentsPanel
-                    :disabled="!!!selection"
-                    @create="createAnnotation"
-                />
-            </div>
         </div>
         <div class="fileEditor__annotations">
             <Annotations
@@ -30,6 +17,13 @@
                 @reveal="revealAnnotation"
             />
         </div>
+
+        <Teleport to="#commentsPanel">
+            <CommentsPanel
+                :disabled="!!!selection"
+                @create="createAnnotation"
+            />
+        </Teleport>
     </div>
 </template>
 
@@ -38,21 +32,12 @@ import { type DecryptedSolutionFile } from 'solution-zone';
 import Annotations from './segment/Annotations.vue';
 import CommentsPanel from './segment/CommentsPanel.vue';
 import Editor, { type Selection } from './segment/Editor.vue';
-import FileOptionsPanel from './segment/FileOptionsPanel.vue';
-
-const emit = defineEmits<{
-    delete: [file: DecryptedSolutionFile];
-}>();
 
 const modelValue = defineModel<DecryptedSolutionFile>({ required: true });
 
 const editor = useTemplateRef('editor');
 
 const selection = shallowRef<Selection | null>(null);
-
-function onDelete() {
-    emit('delete', modelValue.value);
-}
 
 function updateSelection(updatedSelection: Selection, hasContent: boolean) {
     if (!hasContent) {
@@ -82,27 +67,31 @@ function revealAnnotation(selection: Selection) {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .fileEditor {
     display: flex;
     flex-direction: column;
 
     gap: 10px;
 
-    &__interface {
+    .fileEditor__interface {
         display: flex;
 
         gap: 20px;
     }
 
-    &__interfaceControls {
-        width: 20%;
-    }
-
-    &__interfaceEditor {
+    .fileEditor__interfaceEditor {
         min-height: 50vh;
 
-        width: 80%;
+        border-radius: var(--bulma-size-7);
+        overflow: hidden;
+
+        width: 100%;
+    }
+
+    .fileEditor__annotations {
+        border-radius: var(--bulma-size-7);
+        overflow: hidden;
     }
 }
 </style>
