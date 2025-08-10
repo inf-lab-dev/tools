@@ -4,10 +4,6 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     css: ['bulma'],
 
-    components: {
-        dirs: [],
-    },
-
     monacoEditor: {
         locale: 'de',
     },

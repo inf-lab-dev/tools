@@ -6,11 +6,11 @@
                 <button
                     class="delete"
                     aria-label="Schließen"
-                    @click="modelValue = undefined"
+                    @click="modelValue = null"
                 ></button>
             </div>
             <div class="editorPanel__messageBody message-body">
-                <FileEditor v-model="modelValue" />
+                <SolutionEditorPanelEditorFile v-model="modelValue" />
             </div>
         </article>
 
@@ -26,9 +26,10 @@
 
 <script lang="ts" setup>
 import type { DecryptedSolutionFile } from 'solution-zone';
-import FileEditor from './editor/FileEditor.vue';
 
-const modelValue = defineModel<DecryptedSolutionFile>();
+const modelValue = defineModel<DecryptedSolutionFile | null>({
+    required: true,
+});
 </script>
 
 <style lang="css" scoped>

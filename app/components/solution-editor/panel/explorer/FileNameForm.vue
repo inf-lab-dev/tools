@@ -53,7 +53,9 @@ const language = computed(() => {
     const segments = fileName.value.split('.');
     const extension = segments.at(-1);
 
-    return extension ? EXTENSION_LANGUAGE_MAP[extension] : undefined;
+    return extension && segments.length > 1
+        ? EXTENSION_LANGUAGE_MAP[extension]
+        : undefined;
 });
 
 const errorMessage = computed(() => {

@@ -2,7 +2,7 @@
     <div class="fileEditor">
         <div class="fileEditor__interface">
             <div class="fileEditor__interfaceEditor">
-                <Editor
+                <SolutionEditorPanelEditorSegmentEditor
                     ref="editor"
                     v-model="modelValue.code"
                     :annotations="modelValue.annotations"
@@ -12,14 +12,14 @@
             </div>
         </div>
         <div class="fileEditor__annotations">
-            <Annotations
+            <SolutionEditorPanelEditorSegmentAnnotations
                 v-model="modelValue.annotations"
                 @reveal="revealAnnotation"
             />
         </div>
 
         <Teleport to="#commentsPanel">
-            <CommentsPanel
+            <SolutionEditorPanelEditorSegmentComments
                 :disabled="!!!selection"
                 @create="createAnnotation"
             />
@@ -28,10 +28,8 @@
 </template>
 
 <script lang="ts" setup>
-import { type DecryptedSolutionFile } from 'solution-zone';
-import Annotations from './segment/Annotations.vue';
-import CommentsPanel from './segment/CommentsPanel.vue';
-import Editor, { type Selection } from './segment/Editor.vue';
+import type { DecryptedSolutionFile } from 'solution-zone';
+import type { Selection } from './segment/Editor.vue';
 
 const modelValue = defineModel<DecryptedSolutionFile>({ required: true });
 

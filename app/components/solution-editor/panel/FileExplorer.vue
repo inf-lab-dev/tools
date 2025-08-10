@@ -4,11 +4,11 @@
         <a
             v-for="file in files"
             :class="['panel-block', activeFile === file && 'is-active']"
-            @click="activeFile = file"
+            @click.prevent="activeFile = file"
         >
             <div class="fileButtons buttons">
                 <template v-if="renamingFile == file">
-                    <FileNameForm
+                    <SolutionEditorPanelExplorerFileNameForm
                         class="is-flex-grow-1"
                         @saved="
                             file.name = $event.fileName;
@@ -50,7 +50,7 @@
         </div>
 
         <div class="panel-block">
-            <FileNameForm
+            <SolutionEditorPanelExplorerFileNameForm
                 class="fileCreateForm"
                 @saved="createFile"
                 label="Datei erstellen"
@@ -61,16 +61,14 @@
 
 <script lang="ts" setup>
 import type { DecryptedSolutionFile } from 'solution-zone';
-import FileNameForm, { type FileName } from './explorer/FileNameForm.vue';
+import type { FileName } from './explorer/FileNameForm.vue';
 
 const files = defineModel<DecryptedSolutionFile[]>('files', { required: true });
-const activeFile = defineModel<DecryptedSolutionFile>('activeFile');
+const activeFile = defineModel<DecryptedSolutionFile | null>('activeFile', {
+    required: true,
+});
 
 const renamingFile = ref<DecryptedSolutionFile>();
-
-function selectFile(newActiveFile?: DecryptedSolutionFile) {
-    activeFile.value = newActiveFile;
-}
 
 function createFile({ fileName, language }: FileName) {
     const newFile = {
@@ -92,12 +90,12 @@ function onDeleteClicked(fileToDelete: DecryptedSolutionFile) {
     if (confirmed) {
         files.value = files.value.filter((file) => file !== fileToDelete);
 
-        if (renamingFile.value === fileToDelete) {
+        if (renamingFile.value == fileToDelete) {
             renamingFile.value = undefined;
         }
 
-        if (activeFile.value === fileToDelete) {
-            selectFile(undefined);
+        if (activeFile.value == fileToDelete) {
+            activeFile.value = null;
         }
     }
 }

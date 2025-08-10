@@ -3,7 +3,7 @@
         <div class="column is-two-fifths">
             <div class="columns">
                 <div class="column">
-                    <OptionsPanel
+                    <SolutionEditorPanelOptions
                         v-model="decryptedSolution.title"
                         @loaded="loadedSolution"
                         @save="save"
@@ -12,13 +12,14 @@
                 <div class="column" id="commentsPanel"></div>
             </div>
 
-            <FileExplorerPanel
+            <SolutionEditorPanelFileExplorer
                 v-model:files="decryptedSolution.files"
                 v-model:active-file="activeFile"
             />
         </div>
 
-        <EditorPanel class="column" :model-value="activeFile" />
+        {{ activeFile }}
+        <SolutionEditorPanelEditor class="column" v-model="activeFile" />
     </div>
 </template>
 
@@ -28,12 +29,9 @@ import {
     type DecryptedSolution,
     type DecryptedSolutionFile,
 } from 'solution-zone';
-import EditorPanel from './panel/EditorPanel.vue';
-import FileExplorerPanel from './panel/FileExplorerPanel.vue';
-import OptionsPanel from './panel/OptionsPanel.vue';
 
 const hasUnsavedChanges = ref(false);
-const activeFile = ref<DecryptedSolutionFile>();
+const activeFile = ref<DecryptedSolutionFile | null>(null);
 const decryptedSolution = ref<DecryptedSolution>({
     title: '',
     files: [],

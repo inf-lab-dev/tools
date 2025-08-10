@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type DecryptedAnnotation } from 'solution-zone';
+import type { DecryptedAnnotation } from 'solution-zone';
 
 export type Selection = Pick<DecryptedAnnotation, 'line' | 'column'>;
 

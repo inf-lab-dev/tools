@@ -8,10 +8,6 @@
     </div>
 </template>
 
-<script lang="ts" setup>
-import ToolCard from '~/components/ToolCard.vue';
-</script>
-
 <style lang="css" scoped>
 .wrapper {
     display: flex;
