@@ -7,12 +7,7 @@
                 <div class="control">
                     <input
                         v-model="modelValue"
-                        :class="[
-                            'input',
-                            {
-                                'is-danger': !!!modelValue,
-                            },
-                        ]"
+                        :class="['input', !key && 'is-danger']"
                         id="title"
                         type="text"
                     />
@@ -25,12 +20,7 @@
                 <div class="control">
                     <input
                         v-model="key"
-                        :class="[
-                            'input',
-                            {
-                                'is-danger': !!!key,
-                            },
-                        ]"
+                        :class="['input', !key && 'is-danger']"
                         id="encryption-key"
                         type="text"
                         placeholder="busybeaver"
