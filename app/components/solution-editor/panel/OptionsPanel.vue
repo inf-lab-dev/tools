@@ -1,5 +1,5 @@
 <template>
-    <article :class="['panel', 'is-primary']">
+    <article class="panel is-primary">
         <h2 class="panel-heading">Allgemeine Einstellungen</h2>
         <div class="panel-block">
             <div class="field">
