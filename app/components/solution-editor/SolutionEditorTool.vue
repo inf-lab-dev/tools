@@ -85,11 +85,3 @@ onBeforeUnmount(() =>
     window.removeEventListener('beforeunload', onBeforeUnload),
 );
 </script>
-
-<style lang="scss" scoped>
-.view {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-</style>

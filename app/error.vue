@@ -37,7 +37,7 @@ useHead({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .error {
     display: flex;
 
@@ -51,7 +51,7 @@ useHead({
     width: 100vw;
     height: 100vh;
 
-    &__title {
+    .error__title {
         display: flex;
 
         justify-content: center;
@@ -60,19 +60,19 @@ useHead({
         gap: 1rem;
     }
 
-    &__icon {
+    .error__icon {
         font-size: 1000%;
     }
 
-    &__code {
+    .error__code {
         font-size: 400%;
     }
 
-    &__message {
+    .error__message {
         font-size: 150%;
     }
 
-    &__button {
+    .error__button {
         margin-top: 1.5rem;
     }
 }

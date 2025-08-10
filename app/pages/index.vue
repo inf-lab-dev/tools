@@ -12,7 +12,7 @@
 import ToolCard from '~/components/ToolCard.vue';
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .wrapper {
     display: flex;
 
@@ -25,11 +25,11 @@ import ToolCard from '~/components/ToolCard.vue';
     width: 100%;
     min-height: 80vh;
 
-    &__title {
+    .wrapper__title {
         font-size: 780%;
     }
 
-    &__items {
+    .wrapper__items {
         width: 100%;
     }
 }

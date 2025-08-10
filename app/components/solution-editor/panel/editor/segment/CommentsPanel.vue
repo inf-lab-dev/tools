@@ -43,9 +43,9 @@ function createComment() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .comment {
-    &__field {
+    .comment__field {
         width: 100%;
     }
 }
