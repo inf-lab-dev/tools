@@ -57,7 +57,7 @@ useHead({
         justify-content: center;
         align-items: center;
 
-        gap: 0.1rem;
+        gap: 1rem;
     }
 
     &__icon {
