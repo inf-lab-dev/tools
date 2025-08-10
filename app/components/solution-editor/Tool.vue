@@ -18,7 +18,6 @@
             />
         </div>
 
-        {{ activeFile }}
         <SolutionEditorPanelEditor class="column" v-model="activeFile" />
     </div>
 </template>
