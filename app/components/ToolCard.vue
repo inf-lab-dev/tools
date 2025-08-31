@@ -15,7 +15,7 @@ defineProps<{
 }>();
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .card {
     position: relative;
 
@@ -28,11 +28,11 @@ defineProps<{
     padding: 1rem;
     margin-bottom: 0;
 
-    &__icon {
+    .card__icon {
         font-size: 330%;
     }
 
-    &__title {
+    .card__title {
         font-size: 300%;
         font-weight: bold;
         text-align: center;

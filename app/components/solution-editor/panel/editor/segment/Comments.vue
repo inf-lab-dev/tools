@@ -1,5 +1,5 @@
 <template>
-    <form class="panel comment" @submit.prevent="createComment">
+    <form class="panel is-info comment" @submit.prevent="createComment">
         <h2 class="panel-heading">Kommentare</h2>
         <div class="panel-block">
             <div class="field comment__field">
@@ -43,9 +43,9 @@ function createComment() {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .comment {
-    &__field {
+    .comment__field {
         width: 100%;
     }
 }

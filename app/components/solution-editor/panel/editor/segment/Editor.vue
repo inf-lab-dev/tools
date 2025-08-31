@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { type DecryptedAnnotation } from 'solution-zone';
+import type { DecryptedAnnotation } from 'solution-zone';
 
 export type Selection = Pick<DecryptedAnnotation, 'line' | 'column'>;
 
@@ -136,7 +136,7 @@ watch(props, () => updateAnnotations(), { deep: true });
 defineExpose({ gotoSelection });
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .editor {
     display: flex;
     flex-direction: column;
@@ -144,12 +144,12 @@ defineExpose({ gotoSelection });
     width: 100%;
     height: 100%;
 
-    &__monaco {
+    .editor__monaco {
         width: 100%;
         height: 100%;
     }
 
-    &__loader {
+    .editor__loader {
         display: flex;
         flex-direction: column;
 

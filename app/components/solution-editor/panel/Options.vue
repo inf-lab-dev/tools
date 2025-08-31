@@ -1,21 +1,16 @@
 <template>
     <article class="panel is-primary">
-        <h2 class="panel-heading">Einstellungen</h2>
+        <h2 class="panel-heading">Allgemeine Einstellungen</h2>
         <div class="panel-block">
             <div class="field">
-                <label class="label" for="language-selection">
-                    Programmiersprache
-                </label>
+                <label class="label" for="title">Titel</label>
                 <div class="control">
-                    <div class="select">
-                        <select v-model="modelValue" id="language-selection">
-                            <option value="c">C</option>
-                            <option value="python">Python</option>
-                            <option value="javascript">JavaScript</option>
-                            <option value="html">HTML</option>
-                            <option value="css">CSS</option>
-                        </select>
-                    </div>
+                    <input
+                        v-model="modelValue"
+                        :class="['input', !key && 'is-danger']"
+                        id="title"
+                        type="text"
+                    />
                 </div>
             </div>
         </div>
@@ -25,12 +20,7 @@
                 <div class="control">
                     <input
                         v-model="key"
-                        :class="[
-                            'input',
-                            {
-                                'is-danger': !!!key,
-                            },
-                        ]"
+                        :class="['input', !key && 'is-danger']"
                         id="encryption-key"
                         type="text"
                         placeholder="busybeaver"
@@ -75,7 +65,10 @@ const emit = defineEmits<{
 const modelValue = defineModel<string>();
 
 const fileInputElement = useTemplateRef('fileInputElement');
-const key = shallowRef('');
+
+const key = ref('');
+
+const hasError = computed(() => !!!modelValue.value || !!!key.value);
 
 function save() {
     emit('save', key.value);
@@ -90,11 +83,12 @@ async function loadSolution(event: Event) {
     const file = target.files![0];
 
     try {
-        const json = JSON.parse(await file.text());
+        const json = JSON.parse(await file!.text());
         const solution = await decryptFile(key.value, json);
 
         emit('loaded', solution);
     } catch (_) {
+        console.error(_);
         alert(
             'Die Lösung konnte nicht entschlüsselt werden, ist der Schlüssel korrekt?',
         );

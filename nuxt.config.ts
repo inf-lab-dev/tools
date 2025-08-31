@@ -4,21 +4,6 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     css: ['bulma'],
 
-    vite: {
-        css: {
-            preprocessorOptions: {
-                scss: {
-                    silenceDeprecations: ['legacy-js-api'],
-                    quietDeps: true,
-                },
-            },
-        },
-    },
-
-    components: {
-        dirs: [],
-    },
-
     monacoEditor: {
         locale: 'de',
     },

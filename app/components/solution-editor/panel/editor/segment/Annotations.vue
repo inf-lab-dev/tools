@@ -38,12 +38,15 @@
                         <td>{{ comment }}</td>
                         <td>
                             <div class="buttons">
-                                <button class="button" @click="reveal(index)">
+                                <button
+                                    class="button"
+                                    @click="onRevealClick(index)"
+                                >
                                     Auswählen
                                 </button>
                                 <button
                                     class="button is-danger"
-                                    @click="remove(index)"
+                                    @click="onRemoveClick(index)"
                                 >
                                     Löschen
                                 </button>
@@ -66,8 +69,8 @@ const emit = defineEmits<{
 
 const modelValue = defineModel<DecryptedAnnotation[]>({ required: true });
 
-function remove(index: number) {
-    const { comment } = modelValue.value![index];
+function onRemoveClick(index: number) {
+    const { comment } = modelValue.value![index]!;
 
     const proceed = confirm(
         `Möchtest du wirklich den Kommentar "${comment}" löschen?`,
@@ -78,27 +81,27 @@ function remove(index: number) {
     }
 }
 
-function reveal(index: number) {
-    const { line, column } = modelValue.value![index];
+function onRevealClick(index: number) {
+    const { line, column } = modelValue.value![index]!;
 
     emit('reveal', { line, column });
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .table {
     width: 100%;
 
-    &__header {
-        &--range {
+    .table__header {
+        .table__header--range {
             width: 5%;
         }
 
-        &--comment {
+        .table__header--comment {
             width: 70%;
         }
 
-        &--actions {
+        .table__header--actions {
             width: 20%;
         }
     }
