@@ -1,4 +1,5 @@
 <template>
+    <ArchivedBanner />
     <NuxtLayout>
         <NuxtPage />
     </NuxtLayout>
